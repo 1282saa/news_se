@@ -1,0 +1,54 @@
+name: "서울경제신문 스타일북"
+version: "1.0.0"
+description: "서울경제신문 스타일북 데이터를 제공하는 MCP 서버"
+
+tools:
+  - name: get_sections
+    description: "스타일북의 모든 섹션 목록을 반환합니다."
+    parameters: {}
+    returns:
+      type: "array"
+      description: "섹션 정보 목록"
+
+  - name: get_document
+    description: "file_id로 특정 문서를 조회합니다."
+    parameters:
+      file_id:
+        type: "string"
+        description: "문서의 고유 ID"
+        required: true
+    returns:
+      type: "object"
+      description: "문서 내용과 메타데이터"
+
+  - name: search_documents
+    description: "키워드로 문서를 검색합니다."
+    parameters:
+      keyword:
+        type: "string"
+        description: "검색 키워드"
+        required: true
+      limit:
+        type: "integer"
+        description: "최대 결과 수"
+        required: false
+        default: 10
+      offset:
+        type: "integer"
+        description: "페이지네이션 오프셋"
+        required: false
+        default: 0
+    returns:
+      type: "array"
+      description: "검색 결과 목록"
+
+  - name: get_file_by_path
+    description: "파일 경로로 문서를 조회합니다."
+    parameters:
+      filepath:
+        type: "string"
+        description: "문서 파일의 상대 경로"
+        required: true
+    returns:
+      type: "object"
+      description: "문서 내용과 메타데이터"

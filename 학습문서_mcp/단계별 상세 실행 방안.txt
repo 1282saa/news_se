@@ -1,0 +1,242 @@
+# 단계별 상세 실행 방안
+
+## A. 데이터 정리 단계
+
+1. **문서(스타일북) 현황 파악**
+    - 분할된 텍스트 파일이 어느 정도 규모인지(파일 개수, 전체 용량), 파일명·폴더 구조는 어떻게 되어 있는지 점검합니다.
+    - 예: `styles/01_intro.txt`, `styles/02_guidelines.txt`, `styles/03_examples.txt`
+2. **텍스트 → 구조화(간단한 메타데이터 추가)**
+    - 우선은 **파일 시스템 그대로** 두되, 각 파일별 “타이틀”, “섹션 구분”, “최종 수정일” 등 최소한의 **메타정보**만 JSON이나 CSV로 정리해둡니다.
+    - 예: `style_meta.json`:
+        
+        ```json
+        json
+        복사편집
+        [
+          {
+            "file_id": "01_intro",
+            "title": "스타일북 개요",
+            "tags": ["소개", "전체 흐름"],
+            "last_updated": "2023-12-01"
+          },
+          {
+            "file_id": "02_guidelines",
+            "title": "교열 가이드라인",
+            "tags": ["교열", "기자별", "톤"],
+            "last_updated": "2023-12-05"
+          }
+        ]
+        
+        ```
+        
+    - **이유**: 처음부터 복잡한 DB 스키마를 만들기보다는, 텍스트+간단 메타데이터로 시작해 빠르게 기능을 구현하는 것이 MVP 단계에서는 효과적입니다.
+3. **향후 확장 고려**
+    - 나중에 기자별로 추가적인 문체 정보나 규칙이 늘어날 경우, 그때 본격적으로 RDB or NoSQL 마이그레이션을 진행해도 늦지 않습니다.
+    - 현재는 **“빠른 시범 도입”**이 목표이므로, **파일 기반 + 간단한 JSON** 구조로도 충분히 POC(개념 검증) 가능합니다.
+
+---
+
+## B. MCP 서버 스택·설계
+
+1. **언어(Framework) 추천**
+    - *Python(FastAPI)**를 추천드립니다. 이유:
+        - 텍스트 처리와 파일 입출력이 편리함.
+        - JSON-RPC나 REST API 구현도 빠르고 간단함.
+        - 이후 확장(ORM, 검색 기능, AI 라이브러리 연동)도 용이함.
+    - Node.js(Express)도 빠른 개발이 가능하지만, “비정형 텍스트 처리”나 “향후 NLP 확장” 측면에서는 Python 생태계가 좀 더 풍부합니다.
+2. **프로토콜**
+    - **JSON-RPC 2.0**을 따르되, MVP에서는 꼭 엄격하게 지키지 않고 **단순 REST**로 구현해도 무방합니다.
+    - 예: “`GET /api/style/<file_id>` → 해당 텍스트 파일 내용 + 메타데이터 반환” 식으로 시작할 수도 있습니다.
+3. **보안/인증**
+    - MVP 단계에서는 내부망에서만 사용한다면, **간단한 API Key** 방식으로도 충분합니다.
+    - 실제 운영에서 “API Key 발급 + 헤더 검사” 정도만 추가해도 1차적인 보안을 확보할 수 있습니다.
+    - 이후 사내 SSO, VPN, OAuth 등은 규모가 커지면 도입을 고려합니다.
+4. **엔드포인트(도구) 설계**
+    - (a) `get_style_document(file_id: str)`
+        - 지정된 텍스트 파일(또는 DB 문서) 내용을 반환
+    - (b) `search_style_docs(keyword: str)` (선택)
+        - 스타일북 내 키워드 검색 기능 (초기에는 단순 “텍스트 포함 여부”로 구현)
+    - **기자별로 문체가 나뉘어 있는 것이 아니라**, 현재는 “스타일북 전체 문서”만 존재하므로, 특정 기자명을 입력받아 무언가를 반환해야 하는 구조가 아직은 없을 수 있습니다.
+    - 향후, “기자 이름”을 파라미터로 → 해당 기자에게만 적용되는 교열 규칙을 DB에서 찾아 반환하는 함수를 추가할 수 있습니다.
+
+---
+
+## C. DB(혹은 파일) 접근 방식
+
+1. **초기 구현**: 파일 + JSON
+    - 각 txt 파일을 그대로 두고, Python 코드에서 필요할 때 읽어와서 반환.
+    - 메타데이터(`style_meta.json`)를 로드하여, “이 파일은 교열 파트인지, 예시 파트인지” 등 분류 가능.
+2. **추가 기능 필요 시**:
+    - 예: “기사 작성 시 문체와 금칙어를 실시간으로 추출하고 싶다” → MongoDB or Elasticsearch로 마이그레이션해서 검색 성능을 높일 수 있음.
+    - “기자별 스타일이 자주 변경되고, 수정 이력이 필요하다” → RDB (PostgreSQL 등) + `updated_at` 칼럼 활용.
+3. **장단점 요약**:
+    - **파일 기반 + JSON**
+        - 장점: 설정 간단, 빠른 MVP, 변경이 적을 때 편리
+        - 단점: 검색·분석 기능은 한계가 있음(대량 데이터 처리, 버전 관리 어려움)
+    - **RDB**
+        - 장점: 스키마 기반 관리, 쿼리 강력, ACID 보장
+        - 단점: 초기 설계가 필요, 스키마 변경 시 유연성 떨어짐
+    - **NoSQL(MongoDB 등)**
+        - 장점: 비정형 데이터(문서 기반)에 유연함, 기자별·문단별로 Document 구조화 가능
+        - 단점: 관계성 복잡 관리가 필요하면 추가 설계 필요
+
+> 결론: 현재 텍스트 파일 기반 + JSON 메타로 MVP 구현 후, 추후 사용량이나 구조가 복잡해지면 MongoDB 같은 문서형 DB로 확장하는 로드맵이 합리적입니다.
+> 
+
+---
+
+## D. MCP 서버 구현 요령 (간단 예시)
+
+### 1) FastAPI 설치 및 기본 골격
+
+```bash
+bash
+복사편집
+pip install fastapi uvicorn
+
+```
+
+```python
+python
+복사편집
+# file: mcp_server.py
+from fastapi import FastAPI
+import uvicorn
+import json
+import os
+
+app = FastAPI()
+
+# 1) 메타데이터 로드 (스타트업 시 1회)
+with open('style_meta.json', 'r', encoding='utf-8') as f:
+    style_meta = json.load(f)
+
+BASE_DIR = "styles"  # 분할된 txt 파일들이 저장된 폴더
+
+@app.get("/api/style/{file_id}")
+def get_style_document(file_id: str):
+    """
+    파일 ID를 받아 해당 txt 내용과 메타데이터를 반환한다.
+    """
+    # 메타 정보 찾기
+    meta = next((m for m in style_meta if m["file_id"] == file_id), None)
+    if not meta:
+        return {"error": f"File ID {file_id} not found in meta."}
+
+    # txt 파일 로드
+    file_path = os.path.join(BASE_DIR, f"{file_id}.txt")
+    if not os.path.exists(file_path):
+        return {"error": f"Text file not found: {file_id}.txt"}
+
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    return {
+        "file_id": file_id,
+        "metadata": meta,
+        "content": content
+    }
+
+# 예: 간단 검색(선택사항)
+@app.get("/api/search")
+def search_style_docs(keyword: str):
+    """
+    키워드를 포함하는 txt 파일 목록을 검색하여 반환.
+    """
+    results = []
+    for meta in style_meta:
+        file_id = meta["file_id"]
+        file_path = os.path.join(BASE_DIR, f"{file_id}.txt")
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            if keyword in content:
+                results.append({"file_id": file_id, "title": meta["title"]})
+    return results
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=5000)
+
+```
+
+- 실행: `python mcp_server.py` → http://localhost:5000/docs (FastAPI 문서 UI)
+- **AI에서 이 엔드포인트를 호출**해 문서를 가져오거나, 검색할 수 있습니다.
+
+### 2) 보안(API Key) 추가(간단 버전)
+
+- MVP에서는 헤더에 `X-API-KEY: <KEY>` 정도만 검사.
+
+```python
+python
+복사편집
+from fastapi import Request, HTTPException
+
+API_KEY = "YOUR_SECRET_KEY"  # 임시 키
+
+@app.middleware("http")
+async def check_api_key(request: Request, call_next):
+    # 인증 예외 경로 설정(필요시)
+    if request.url.path.startswith("/api"):
+        provided_key = request.headers.get("X-API-KEY")
+        if provided_key != API_KEY:
+            raise HTTPException(status_code=401, detail="Invalid API key")
+    return await call_next(request)
+
+```
+
+---
+
+## E. Claude 연동
+
+1. **Claude에서 MCP 서버 호출 로직**
+    - Claude Desktop(혹은 다른 통합 IDE)에서 “도구(툴)”를 등록할 때,
+        - `GET /api/style/{file_id}` → `get_style_document(file_id)`,
+        - `GET /api/search?keyword=...` → `search_style_docs(keyword)`.
+    - LLM이 자연어 명령 “스타일북에서 ‘교열’ 관련 섹션 보여줘” → “search_style_docs("교열")” → 결과 중 하나를 선택 → “get_style_document(file_id)” 호출 → 사용자에게 내용 표시.
+2. **프롬프트 설계 예시**
+    - 시스템 메시지(또는 Claude 설정 메시지):
+        
+        ```
+        bash
+        복사편집
+        당신은 신문사 스타일북을 조회할 수 있는 능력이 있습니다.
+        "교열"이나 "기자 스타일" 내용을 확인하려면 /api/search?keyword=... 를 호출하십시오.
+        파일 ID를 알게 되면 /api/style/{file_id} 로 문서를 불러올 수 있습니다.
+        반환된 내용은 사용자에게 요약/설명해주십시오.
+        
+        ```
+        
+3. **추가 문체 반영**
+    - 현재는 “스타일북” 자체를 AI가 참조하는 수준입니다.
+    - 기자별 문체가 구분되어 있고, 그 규칙을 AI가 자동으로 반영케 하려면,
+        - 나중에 **기자별** DB(또는 JSON) 구축 → `get_reporter_style("기자명")` 엔드포인트 추가 → Claude가 해당 규칙을 동적으로 적용(금칙어 필터, 문체 변환 등).
+
+---
+
+## F. 차후 고도화 아이디어
+
+1. **문서 구조 세분화**
+    - 텍스트 파일을 특정 구역(“문체 규칙”, “금칙어”, “기사 작성 예시” 등)으로 더 쪼개어 보관
+    - AI가 세분화된 정보를 더 정확히 활용할 수 있음.
+2. **MongoDB 도입**
+    - 문서 단위로 저장 + 필드(제목, 태그, 업데이트 일자 등) → 빠른 검색, 부분 갱신이 가능
+    - NoSQL은 비정형 데이터를 저장/조회하기에 용이.
+3. **검색 엔진(Elasticsearch, Meilisearch 등)**
+    - 스타일북 내용이 많아지고, 기자별로 매우 다양한 세부 조항이 생기면, 전체 텍스트를 인덱싱하여 고급 검색(유사도, 구문 검색 등) 기능을 제공.
+4. **보안 정책 강화**
+    - API Key 외에 사내 SSO, VPN 인증, 역할별 접근 제어(RBAC) 등을 적용
+    - 예: 편집자만 수정 가능한 엔드포인트, 기자만 열람 가능한 섹션.
+5. **자동 버전 관리**
+    - 문서를 업데이트할 때마다 이전 버전을 백업해두어, 과거 스타일북 규칙을 열람할 수 있게 함.
+
+---
+
+# 정리 및 제안
+
+1. **MVP(시범 도입) 방향**
+    - **파일 기반 + 간단 JSON**을 활용해 **FastAPI**로 MCP 서버를 빠르게 구성 → Claude에서 필요한 텍스트를 조회하는 **기본 기능** 완성.
+    - 최소한의 API Key 인증 추가로 사내 보안을 유지.
+2. **장점**
+    - **구현이 단순**하고, **신속**하게 결과물을 확인 가능.
+    - 스타일북 텍스트가 애초에 비정형이므로, RDB 스키마 설계 부담이 없음.
+3. **차후 확장 로드맵**
+    - 추후 문체 규칙·기자별 교열 DB가 복잡해지면, **NoSQL**로 이관 + **검색 엔진** 연동 → AI가 “기자 A 스타일”을 더 정교하게 반영하도록 발전.

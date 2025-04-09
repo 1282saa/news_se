@@ -1,0 +1,230 @@
+{
+  "stylebook_metadata": {
+    "title": "서울경제신문 스타일북",
+    "created_date": "2023-04-09",
+    "last_updated": "2023-04-09",
+    "description": "서울경제신문 기사 작성 및 편집을 위한 스타일 가이드",
+    "sections": [
+      {
+        "id": "section_1",
+        "title": "서론",
+        "path": "스타일북/1서론",
+        "files": [
+          {
+            "file_id": "news_what",
+            "title": "뉴스란 무엇인가",
+            "filename": "1_1뉴스란 무엇인가.json",
+            "tags": ["뉴스", "정의", "원칙", "기자지침"]
+          },
+          {
+            "file_id": "news_value_elements",
+            "title": "뉴스 가치 판단의 기본요소",
+            "filename": "1_2뉴스 가치 판단의 기본요소.json",
+            "tags": ["뉴스가치", "판단기준", "기본요소"]
+          },
+          {
+            "file_id": "news_value_judgment",
+            "title": "뉴스 가치 이렇게 판단하라",
+            "filename": "1_3뉴스 가치 이렇게 판단하라.json",
+            "tags": ["뉴스가치", "판단방법", "실무지침"]
+          }
+        ]
+      },
+      {
+        "id": "section_2",
+        "title": "기사작성 요령",
+        "path": "스타일북/2기사작성 요령",
+        "files": [
+          {
+            "file_id": "basic_principles",
+            "title": "기본원칙",
+            "filename": "2_1기본원칙.json",
+            "tags": ["기사작성", "문체", "원칙"]
+          },
+          {
+            "file_id": "writing_lead",
+            "title": "리드 쓰기",
+            "filename": "2_2리드 쓰기.json",
+            "tags": ["리드", "기사서두", "작성법"]
+          },
+          {
+            "file_id": "sentence_requirements",
+            "title": "문장 요건",
+            "filename": "2_3문장 요건.json",
+            "tags": ["문장", "요건", "작성법"]
+          },
+          {
+            "file_id": "expressions_to_avoid",
+            "title": "피해야 할 표현들",
+            "filename": "2_4피해야 할 표현들.json",
+            "tags": ["금지표현", "문장", "금기어"]
+          },
+          {
+            "file_id": "article_type_tips",
+            "title": "기사 유형별 작성 요령",
+            "filename": "2_5기사 유형별 작성 요령.json",
+            "tags": ["기사유형", "작성법", "유형별지침"]
+          }
+        ]
+      },
+      {
+        "id": "section_3",
+        "title": "기사 작성 준칙",
+        "path": "스타일북/3기사 작성 준칙",
+        "files": [
+          {
+            "file_id": "names",
+            "title": "인명",
+            "filename": "3_1인명.json",
+            "tags": ["인명", "표기법", "인용"]
+          },
+          {
+            "file_id": "place_names",
+            "title": "지명",
+            "filename": "3_2지명.json",
+            "tags": ["지명", "표기법", "국가명"]
+          },
+          {
+            "file_id": "institutions",
+            "title": "관청기관·정당·관직명",
+            "filename": "3_3관청기관·정당·관직명.json",
+            "tags": ["기관명", "정당명", "관직명", "표기법"]
+          },
+          {
+            "file_id": "time_date",
+            "title": "시간과 날짜의 표기",
+            "filename": "3_4시간과 날짜의 표기.json",
+            "tags": ["시간", "날짜", "표기법"]
+          },
+          {
+            "file_id": "numbers_units",
+            "title": "숫자 및 단위",
+            "filename": "3_5숫자 및 단위.json",
+            "tags": ["숫자", "단위", "표기법"]
+          },
+          {
+            "file_id": "punctuation",
+            "title": "문장부호 및 약물",
+            "filename": "3_6문장부호 및 약물.json",
+            "tags": ["문장부호", "약물", "표기법"]
+          },
+          {
+            "file_id": "other_rules",
+            "title": "기타",
+            "filename": "3_7기타.json",
+            "tags": ["기타", "표기법", "규칙"]
+          }
+        ]
+      },
+      {
+        "id": "section_4",
+        "title": "제목과 레이아웃_제목달기",
+        "path": "스타일북/5제목과 레이아웃_제목달기",
+        "files": [
+          {
+            "file_id": "headline_writing",
+            "title": "제목달기",
+            "filename": "4_1제목달기.json",
+            "tags": ["제목", "작성법", "원칙"]
+          },
+          {
+            "file_id": "article_type_headlines",
+            "title": "기사성격별 제목 작성법",
+            "filename": "4_2기사성격별 제목 작성법.json",
+            "tags": ["제목", "기사유형", "작성법"]
+          },
+          {
+            "file_id": "headline_examples",
+            "title": "유형별 제목 사용 사례",
+            "filename": "4_3유형별 제목 사용 사례.json",
+            "tags": ["제목", "사례", "예시"]
+          }
+        ]
+      },
+      {
+        "id": "section_5",
+        "title": "제목과 레이아웃_레이아웃 요령",
+        "path": "스타일북/4제목과 레이아웃_레이아웃 요령",
+        "files": [
+          {
+            "file_id": "layout_definition",
+            "title": "레이아웃이란",
+            "filename": "5_1레이아웃이란.json",
+            "tags": ["레이아웃", "정의", "개요"]
+          },
+          {
+            "file_id": "layout_principles",
+            "title": "레이아웃의 원리",
+            "filename": "5_2레이아웃의 원리.json",
+            "tags": ["레이아웃", "원리", "기본원칙"]
+          },
+          {
+            "file_id": "layout_considerations",
+            "title": "레이아웃시 고려사항",
+            "filename": "5_3레이아웃시 고려사항.json",
+            "tags": ["레이아웃", "고려사항", "주의점"]
+          },
+          {
+            "file_id": "article_placement",
+            "title": "기사배치",
+            "filename": "5_4기사배치.json",
+            "tags": ["기사배치", "레이아웃", "편집"]
+          },
+          {
+            "file_id": "visual_placement",
+            "title": "시각물의 배치",
+            "filename": "5_5시각물의 배치.json",
+            "tags": ["시각물", "배치", "사진", "그래픽"]
+          },
+          {
+            "file_id": "headline_placement",
+            "title": "제목 배치",
+            "filename": "5_6제목 배치.json",
+            "tags": ["제목배치", "레이아웃", "편집"]
+          }
+        ]
+      },
+      {
+        "id": "section_6",
+        "title": "부록",
+        "path": "스타일북/6부록",
+        "files": [
+          {
+            "file_id": "article_writing_appendix",
+            "title": "[부록]기사 작성 요령",
+            "filename": "7_1[부록]기사 작성 요령.json",
+            "tags": ["부록", "기사작성", "요령"]
+          },
+          {
+            "file_id": "common_mistakes_01",
+            "title": "자주 틀리는 말01",
+            "filename": "7_2자주 틀리는 말01.json",
+            "tags": ["오류표현", "바른말", "표기법"]
+          },
+          {
+            "file_id": "common_mistakes_02",
+            "title": "자주 틀리는 말02",
+            "filename": "7_2자주 틀리는 말02.json",
+            "tags": ["오류표현", "바른말", "표기법"]
+          },
+          {
+            "file_id": "common_mistakes_03",
+            "title": "자주 틀리는 말03",
+            "filename": "7_2자주 틀리는 말03.json",
+            "tags": ["오류표현", "바른말", "표기법"]
+          },
+          {
+            "file_id": "common_mistakes_04",
+            "title": "자주 틀리는 말04",
+            "filename": "7_2자주 틀리는 말04.json",
+            "tags": ["오류표현", "바른말", "표기법"]
+          }
+        ]
+      }
+    ],
+    "usage": {
+      "purpose": "본 스타일북은 서울경제신문의 기자, 에디터 및 관련 직원들이 일관된 형식과 품질로 기사를 작성하고 편집하기 위한 지침서입니다.",
+      "access_instructions": "각 섹션별로 구분되어 있으며, JSON 파일과 텍스트 파일로 제공됩니다. JSON 파일은 구조화된 형식으로 내용을 쉽게 검색하고 활용할 수 있게 합니다."
+    }
+  }
+}
