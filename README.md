@@ -61,13 +61,26 @@ API_KEY="your-api-key" python -m stylebook_mcp_server.server
 
 ## Claude Desktop에서 설정
 
-### 로컬 실행
+### 로컬 실행 (모듈 방식 - 권장)
 
 ```json
 {
   "mcpServers": {
     "stylebook-server": {
-      "command": "python",
+      "command": "/절대/경로/python3", // 예: "/usr/bin/python3" 또는 "/Users/username/anaconda3/bin/python3"
+      "args": ["-m", "stylebook_mcp_server.server", "--no-auth"]
+    }
+  }
+}
+```
+
+### 로컬 실행 (상대 경로)
+
+```json
+{
+  "mcpServers": {
+    "stylebook-server": {
+      "command": "python3",
       "args": ["-m", "stylebook_mcp_server.server", "--no-auth"]
     }
   }
@@ -121,6 +134,30 @@ API_KEY="your-api-key" python -m stylebook_mcp_server.server
   }
 }
 ```
+
+### 문제 해결
+
+Claude Desktop에서 MCP 서버 연결 시 문제가 발생하는 경우:
+
+1. Python 경로가 올바른지 확인하세요:
+
+   ```bash
+   which python3  # 실제 Python 경로 확인
+   ```
+
+2. 패키지가 설치되어 있는지 확인하세요:
+
+   ```bash
+   pip list | grep stylebook-mcp-server
+   ```
+
+3. 경로에 공백이나 한글이 포함된 경우 모듈 방식으로 실행하세요:
+   ```json
+   {
+     "command": "/절대/경로/python3",
+     "args": ["-m", "stylebook_mcp_server.server", "--no-auth"]
+   }
+   ```
 
 ## API 엔드포인트
 
