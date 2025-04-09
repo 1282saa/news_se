@@ -179,6 +179,32 @@ Claude Desktop에서 MCP 서버 연결 시 문제가 발생하는 경우:
 5. **`ENOENT` 오류 해결:**
    MCP 서버가 "spawn python ENOENT" 오류를 발생시키는 경우, Python 실행 파일의 절대 경로가 올바른지 확인하고 환경 변수를 명시적으로 설정하세요. Claude Desktop은 상대 경로를 처리하는 데 문제가 있을 수 있으므로 항상 절대 경로를 사용하는 것이 좋습니다.
 
+6. **`ModuleNotFoundError` 해결:**
+   'stylebook_mcp_server' 모듈을 찾을 수 없는 오류가 발생하는 경우, 다음 두 가지 방법 중 하나를 선택하세요:
+
+   a) 패키지 설치하기 (권장):
+
+   ```bash
+   cd "프로젝트_디렉토리"
+   pip install -e .
+   ```
+
+   b) 직접 파일 경로 사용하기:
+
+   ```json
+   {
+     "mcpServers": {
+       "stylebook-server": {
+         "command": "/절대/경로/python3",
+         "args": [
+           "/절대/경로/MCP서버개발/stylebook_mcp_server/server.py",
+           "--no-auth"
+         ]
+       }
+     }
+   }
+   ```
+
 ## API 엔드포인트
 
 ### 메인 JSON-RPC 엔드포인트
