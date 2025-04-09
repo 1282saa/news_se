@@ -152,12 +152,32 @@ Claude Desktop에서 MCP 서버 연결 시 문제가 발생하는 경우:
    ```
 
 3. 경로에 공백이나 한글이 포함된 경우 모듈 방식으로 실행하세요:
+
    ```json
    {
      "command": "/절대/경로/python3",
      "args": ["-m", "stylebook_mcp_server.server", "--no-auth"]
    }
    ```
+
+4. **PATH 환경 변수 설정 (권장):**
+
+   ```json
+   {
+     "mcpServers": {
+       "stylebook-server": {
+         "command": "/Users/username/anaconda3/bin/python3",
+         "args": ["-m", "stylebook_mcp_server.server", "--no-auth"],
+         "env": {
+           "PATH": "/Users/username/anaconda3/bin:/usr/local/bin:/usr/bin:/bin"
+         }
+       }
+     }
+   }
+   ```
+
+5. **`ENOENT` 오류 해결:**
+   MCP 서버가 "spawn python ENOENT" 오류를 발생시키는 경우, Python 실행 파일의 절대 경로가 올바른지 확인하고 환경 변수를 명시적으로 설정하세요. Claude Desktop은 상대 경로를 처리하는 데 문제가 있을 수 있으므로 항상 절대 경로를 사용하는 것이 좋습니다.
 
 ## API 엔드포인트
 
